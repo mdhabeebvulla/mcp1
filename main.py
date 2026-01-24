@@ -1,31 +1,33 @@
 from fastapi import FastAPI
 from mcp.server.fastmcp import FastMCP
 
-# Create MCP server (stateless is good for cloud)
-mcp = FastMCP("ReverseWordServer", stateless_http=True)
+# Create MCP server
+mcp = FastMCP(
+    "ReverseWordServer",
+    stateless_http=True,
+)
 
+# Tool definition
 @mcp.tool(description="Reverse a single word. Example: 'user' -> 'resu'")
 def reverse_word(word: str) -> str:
     return word[::-1]
 
-# FastAPI app for health/info
+# FastAPI app
 app = FastAPI(title="Reverse MCP Server")
 
 @app.get("/")
-def home():
+def root():
     return {
         "status": "ok",
-        "message": "Reverse MCP server is running.",
-        "mcp_endpoint": "/mcp (JSON-RPC over HTTP POST)",
-        "example": {"tool": "reverse_word", "input": "user", "output": "resu"},
-        "note": "OpenAI must point server_url to https://<host>/mcp (no trailing slash)."
+        "message": "Reverse MCP server running",
+        "mcp_endpoint": "/mcp",
     }
 
 @app.get("/health")
 def health():
     return {"ok": True}
 
-# IMPORTANT:
-# FastMCP streamable HTTP app exposes MCP at /mcp by default.
-# So mount it under "/" and DO NOT create your own FastAPI route at "/mcp".
-app.mount("/", mcp.streamable_http_app())
+# 🚨 CRITICAL:
+# Mount MCP FIRST and do NOT create /mcp routes yourself.
+mcp_app = mcp.streamable_http_app()
+app.mount("/", mcp_app)
