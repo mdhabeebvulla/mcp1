@@ -11,7 +11,7 @@ def reverse_word(word: str) -> str:
 # FastAPI wrapper (optional but useful for health checks / homepage)
 app = FastAPI(title="Reverse MCP Server")
 
-@app.get("/")
+@app.get("/mcp")
 def home():
     return {
         "status": "ok",
