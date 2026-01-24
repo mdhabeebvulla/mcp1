@@ -1,20 +1,13 @@
-from fastapi import FastAPI
+import os
 from mcp.server.fastmcp import FastMCP
 
-# Create MCP server
-mcp = FastMCP(
-    "ReverseWordServer",
-    stateless_http=True,
-)
+PORT = int(os.environ.get("PORT", "10000"))
 
-# Tool definition
+mcp = FastMCP("ReverseWordServer", stateless_http=True)
+
 @mcp.tool(description="Reverse a single word. Example: 'user' -> 'resu'")
 def reverse_word(word: str) -> str:
     return word[::-1]
 
-# Create FastAPI app ONLY to host MCP
-app = FastAPI()
-
-# 🚨 DO NOT define /mcp routes yourself.
-# Mount MCP root so its default /mcp endpoint works.
-app.mount("/", mcp.streamable_http_app())
+if __name__ == "__main__":
+    mcp.run(host="0.0.0.0", port=PORT)
