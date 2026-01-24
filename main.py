@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from mcp.server.fastmcp import FastMCP
-
+#hi
 # Create an MCP server (stateless is perfect for simple tools)
 mcp = FastMCP("ReverseWordServer", stateless_http=True)
 
