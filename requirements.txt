@@ -1,2 +1,1 @@
-mcp
-nest_asyncio
+mcp>=1.10.0
