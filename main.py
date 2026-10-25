@@ -15,6 +15,8 @@ mcp = FastMCP(
 def reverse_word(word: str) -> str:
     """Reverse a single word."""
     return word[::-1]
-
+@mcp.tool(description="Return the current local date and time as a string.")
+def current_time() -> str:
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 if __name__ == "__main__":
     mcp.run(transport="streamable-http")
